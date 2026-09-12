@@ -13,10 +13,21 @@ void Emulator::readOpcode()
     m_NNN = static_cast<uint16_t>( (m_opcode & 0x0FFFu) );
 }
 
-void Emulator::o_0x00E0u()
+void Emulator::o_0x00E0()
 {
     m_chip8.clearScreen();
     m_shouldDraw = true;
+}
+
+void Emulator::o_0x2NNN()
+{
+    m_chip8.pushPCToStack(m_chip8.getPC());
+    m_chip8.setPC(m_NNN);
+}
+
+void Emulator::o_0x00EE()
+{
+    m_chip8.setPC(m_chip8.popStack());
 }
 
 

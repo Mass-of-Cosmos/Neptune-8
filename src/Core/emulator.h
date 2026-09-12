@@ -12,13 +12,19 @@ class Emulator
     uint8_t m_Y{};
     uint8_t m_N{};
     uint8_t m_NN{};
-    uint8_t m_NNN{};
+    uint16_t m_NNN{};
     bool m_shouldDraw{false};
 
     // opcodes are prefixed with o_
 
     // clear screen
-    void o_0x00E0u();
+    void o_0x00E0();
+    // sets PC to NNN
+    void o_0x1NNN() { m_chip8.setPC(m_NNN);}
+    // remove the last address from the stack and set the PC to it.
+    void o_0x00EE();
+    // push the current PC to the stack. then set PC to NNN.
+    void o_0x2NNN();
 
 public:
     void readOpcode();

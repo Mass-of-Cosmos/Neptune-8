@@ -59,7 +59,8 @@ public:
         }
    }
     void movePCNext() {m_programCounter += 2;}
-    // uint16_t getPC() const {return m_programCounter;}
+    uint16_t getPC() const {return m_programCounter;}
+    void setPC(uint16_t vlaue) {m_programCounter = vlaue;}
     bool loadRom(const std::string& path);
 
     // get the pixel at any specific coordinate
@@ -69,6 +70,9 @@ public:
     void clearScreen();
     // return the opcode that PC is currently pointing at from memory | also it should move PC to the next instruction
     uint16_t fetch() { movePCNext(); return m_programCounter;  }
+    void pushPCToStack(uint16_t pc) {m_stack.push_back(pc);}
+    // also returns the popped stack
+    uint16_t popStack() { uint16_t poppedStack{m_stack.back()}; m_stack.pop_back(); return poppedStack; }
 };
 
 #endif
