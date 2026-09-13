@@ -73,6 +73,8 @@ public:
     void pushPCToStack(uint16_t pc) {m_stack.push_back(pc);}
     // also returns the popped stack
     uint16_t popStack() { uint16_t poppedStack{m_stack.back()}; m_stack.pop_back(); return poppedStack; }
+    uint16_t getGPRegister(std::size_t index) {return m_GPRegisters[index];}
+    void setGPRegister(std::size_t indexOfRegister, uint16_t newValue) {m_GPRegisters[indexOfRegister] = newValue;}
 };
 
 #endif

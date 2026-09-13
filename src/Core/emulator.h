@@ -25,6 +25,16 @@ class Emulator
     void o_0x00EE();
     // push the current PC to the stack. then set PC to NNN.
     void o_0x2NNN();
+    // will skip one instruction if the value in VX is equal to NN
+    void o_0x3XNN();
+    //   will skip one instruction if the value in VX is NOT equal to NN
+    void o_0x4XNN();
+    // skips if the values in VX and VY are equal
+    void o_0x5XY0();
+    // skips if the values in VX and VY are NOT equal
+    void o_0x9XY0();
+    // set VX to NN
+    void o_0x6XNN();
 
 public:
     void readOpcode();
