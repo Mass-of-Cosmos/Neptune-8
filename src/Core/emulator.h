@@ -1,7 +1,7 @@
 #ifndef EMULATOR_H
 #define EMULATOR_H
 #include <cstdint>
-#include "chip 8.h"
+#include "chip8.h"
 
 class Emulator
 {
@@ -35,9 +35,16 @@ class Emulator
     void o_0x9XY0();
     // set VX to NN
     void o_0x6XNN();
+    // Add the value NN to VX
+    void o_0x7XNN();
+    // sets the index register I to the value NNN
+    void o_0xANNN();
+    // the display opcode
+    void o_0xDXYN();
 
 public:
     void readOpcode();
+    void execute();
 
 };
 

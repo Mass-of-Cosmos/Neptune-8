@@ -69,12 +69,15 @@ public:
     std::vector<uint8_t> getDisplay() const {return m_display; }
     void clearScreen();
     // return the opcode that PC is currently pointing at from memory | also it should move PC to the next instruction
-    uint16_t fetch() { movePCNext(); return m_programCounter;  }
+    uint16_t fetch() { movePCNext(); return m_memory[ m_programCounter ];  }
     void pushPCToStack(uint16_t pc) {m_stack.push_back(pc);}
     // also returns the popped stack
     uint16_t popStack() { uint16_t poppedStack{m_stack.back()}; m_stack.pop_back(); return poppedStack; }
     uint16_t getGPRegister(std::size_t index) {return m_GPRegisters[index];}
     void setGPRegister(std::size_t indexOfRegister, uint16_t newValue) {m_GPRegisters[indexOfRegister] = newValue;}
+    void setIRegister(uint16_t value) {m_Iregister = value;}
+    uint16_t getIRegister() const {return m_Iregister;}
+    uint16_t getMemmoryLocation( uint16_t locationIndex) {return m_memory[locationIndex];}
 };
 
 #endif

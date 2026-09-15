@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 23)
 add_executable(Neptune_8
         src/Core/emulator.cpp
         src/Core/emulator.h
-        "src/Core/chip 8.h"
+        "src/Core/chip8.h"
         src/main.cpp
         src/Core/chip8.cpp
         src/Frontend/SDLWindow.cpp
