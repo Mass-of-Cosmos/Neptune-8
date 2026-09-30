@@ -37,3 +37,17 @@ void Chip8::clearScreen()
     for (auto& e : m_display)
         e = 0;
 }
+
+uint16_t Chip8::fetch()
+{
+    uint16_t highByte {m_memory[m_programCounter]};
+    uint16_t lowByte {m_memory[m_programCounter + 1]};
+
+    // merge them together
+    uint16_t opcode {  static_cast<uint16_t>(highByte << 8 | lowByte) };
+
+    // move pc next
+    movePCNext();
+
+    return opcode;
+}

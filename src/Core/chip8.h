@@ -69,7 +69,7 @@ public:
     std::vector<uint8_t> getDisplay() const {return m_display; }
     void clearScreen();
     // return the opcode that PC is currently pointing at from memory | also it should move PC to the next instruction
-    uint16_t fetch() { movePCNext(); return m_memory[ m_programCounter ];  }
+    uint16_t fetch();
     void pushPCToStack(uint16_t pc) {m_stack.push_back(pc);}
     // also returns the popped stack
     uint16_t popStack() { uint16_t poppedStack{m_stack.back()}; m_stack.pop_back(); return poppedStack; }
