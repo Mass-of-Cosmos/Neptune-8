@@ -5,12 +5,12 @@
 void Emulator::readOpcode()
 {
     m_opcode = m_chip8.fetch();
-    m_firstNibble = static_cast<uint8_t>( (m_opcode & 0xF000u) >> 12);
-    m_X = static_cast<uint8_t>( (m_opcode & 0x0F00u) >> 8);
-    m_Y = static_cast<uint8_t>( (m_opcode & 0x00F0u) >> 4);
-    m_N = static_cast<uint8_t>( (m_opcode & 0x000Fu) );
-    m_NN = static_cast<uint8_t>( (m_opcode & 0x00FFu));
-    m_NNN = static_cast<uint16_t>( (m_opcode & 0x0FFFu) );
+    m_firstNibble = static_cast<uint8_t>((m_opcode & 0xF000u) >> 12);
+    m_X = static_cast<uint8_t>((m_opcode & 0x0F00u) >> 8);
+    m_Y = static_cast<uint8_t>((m_opcode & 0x00F0u) >> 4);
+    m_N = static_cast<uint8_t>((m_opcode & 0x000Fu));
+    m_NN = static_cast<uint8_t>((m_opcode & 0x00FFu));
+    m_NNN = static_cast<uint16_t>((m_opcode & 0x0FFFu));
 }
 
 void Emulator::o_0x00E0()
@@ -71,45 +71,47 @@ void Emulator::o_0xANNN()
 
 void Emulator::o_0xDXYN()
 {
-    // The first thing to do is to get the X and Y coordinates from VX and VY.
-    // Set the X coordinate to the value in VX modulo 64
-    uint16_t XCoord{ m_chip8.getGPRegister(m_X & 63) };
-    // Set the Y coordinate to the value in VY modulo 32
-    uint16_t YCoord{ m_chip8.getGPRegister(m_Y & 31) };
+    uint8_t xCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 63)};
+    uint8_t xCoordInitial{ xCoord };
+    uint8_t yCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_Y) & 31)};
 
     // set VF to 0
     m_chip8.setGPRegister(0xF, 0);
 
-    // for N Rows:
-    // Get the Nth byte of sprite data, counting from the memory address in the I register (I is not incremented)
-    uint8_t NthByteOfSpriteData{ static_cast<uint8_t>(m_chip8.getMemmoryLocation(m_chip8.getIRegister() + static_cast<uint16_t>(m_N) )) };
+    uint8_t totalRows{ m_N };
 
-    // For each of the 8 pixels/bits in this sprite row (from left to right, ie. from most to least significant bit):
-    for (uint8_t i{0b10000000}; i != 0; i >> 1)
+    for (std::size_t row{0}; row < totalRows; ++row)
     {
-        //If the current pixel in the sprite row is on and the pixel at coordinates X,Y on the screen is also on,
-        //turn off the pixel and set VF to 1
-        if ( (i & NthByteOfSpriteData) && (m_chip8.getPixelAtCoord(XCoord, YCoord)) )
+        xCoord = xCoordInitial;
+        // get Nth byte of sprite data
+        uint8_t nthByteSprite{static_cast<uint8_t>(m_chip8.getMemmoryLocation(m_chip8.getIRegister() + row))};
+        for (int i{0}; i < 8; ++i)
         {
-            m_chip8.setPixelAtCoord(XCoord, YCoord, 0);
-            m_chip8.setGPRegister(0xF, 1);
-        }
-        // Or if the current pixel in the sprite row is on and the screen pixel is not,
-        // draw the pixel at the X and Y coordinates
-        else if ( (i & NthByteOfSpriteData) && !(m_chip8.getPixelAtCoord(XCoord, YCoord)) )
-        {
-            m_chip8.setPixelAtCoord(XCoord, YCoord, 1);
-        }
-        // If you reach the right edge of the screen, stop drawing this row
-        if (m_X == 63)
-            break;
-        // Increment X (VX is not incremented)
-        ++m_X;
+            uint8_t currentPixelInSprite{};
+            currentPixelInSprite = static_cast<uint8_t>(nthByteSprite & 0b10000000);
+            //If the current pixel in the sprite row is on and the pixel at coordinates X,Y on the screen is also on
+            if (currentPixelInSprite && m_chip8.getPixelAtCoord(xCoord, yCoord))
+            {
+                m_chip8.setPixelAtCoord(xCoord, yCoord, 0); // turn off the pixel
+                m_chip8.setGPRegister(0xF, 1); // set VF to 1
+            }
+            // if the current pixel in the sprite row is on and the screen pixel is not
+            else if (currentPixelInSprite && (m_chip8.getPixelAtCoord(xCoord, yCoord) == 0))
+            {
+                m_chip8.setPixelAtCoord(xCoord, yCoord, 1); // Draw the Pixel
+            }
+            nthByteSprite <<= 1; // move to the next bit for the next iteration (should be in the end of our for loop)
 
-        // Increment Y (VY is not incremented)
-        ++m_Y;
-        // Stop if you reach the bottom edge of the screen
-        if (m_Y == 31)
+            ++xCoord;
+            if (xCoord >= 64)
+            {
+                break;
+            }
+        }
+        ++yCoord;
+        if (yCoord >= 32)
+        {
             return;
+        }
     }
 }
