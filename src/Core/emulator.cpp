@@ -72,13 +72,13 @@ void Emulator::o_0xANNN()
 void Emulator::o_0xDXYN()
 {
     uint8_t xCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 63)};
-    uint8_t xCoordInitial{ xCoord };
+    uint8_t xCoordInitial{xCoord};
     uint8_t yCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_Y) & 31)};
 
     // set VF to 0
     m_chip8.setGPRegister(0xF, 0);
 
-    uint8_t totalRows{ m_N };
+    uint8_t totalRows{m_N};
 
     for (std::size_t row{0}; row < totalRows; ++row)
     {
@@ -113,5 +113,60 @@ void Emulator::o_0xDXYN()
         {
             return;
         }
+    }
+}
+
+void Emulator::execute()
+{
+    if (m_opcode == 0x00E0)
+    {
+        o_0x00E0();
+        return;
+    }
+    if (m_opcode == 0x00EE)
+    {
+        o_0x00EE();
+        return;
+    }
+
+    switch (m_firstNibble)
+    {
+        case 1:
+            o_0x1NNN();
+            break;
+        case 2:
+            o_0x2NNN();
+            break;
+        case 3:
+            o_0x3XNN();
+            break;
+        case 4:
+            o_0x4XNN();
+            break;
+        case 5:
+            switch (m_N)
+                case 0:
+                    o_0x5XY0();
+            break;
+            break;
+        case 9:
+            switch (m_N)
+        case 0:
+            o_0x9XY0();
+            break;
+            break;
+        case 6:
+            o_0x6XNN();
+            break;
+        case 7:
+            o_0x7XNN();
+            break;
+        case 0xA:
+            o_0xANNN();
+            break;
+        case 0xD:
+            o_0xDXYN();
+            break;
+
     }
 }
