@@ -42,6 +42,23 @@ class Emulator
     // the display opcode
     void o_0xDXYN();
 
+    // Logical and arithmetic instructions
+
+    // VX is set to the value of VY.
+    void o_0x8XY0();
+
+    // VX is set to the bitwise/binary logical disjunction (OR) of VX and VY. VY is not affected.
+    void o_0x8XY1();
+
+    // VX is set to the bitwise/binary logical conjunction (AND) of VX and VY. VY is not affected.
+    void o_0x8XY2();
+
+    // VX is set to the bitwise/binary exclusive OR (XOR) of VX and VY. VY is not affected.
+    void o_0x8XY3();
+
+    // VX is set to the value of VX plus the value of VY. VY is not affected.
+    void o_0x8XY4();
+
 public:
     void readOpcode();
     void execute();

@@ -69,6 +69,46 @@ void Emulator::o_0xANNN()
     m_chip8.setIRegister(m_NNN);
 }
 
+void Emulator::o_0x8XY0()
+{
+    m_chip8.setGPRegister(m_X, m_chip8.getGPRegister(m_Y));
+}
+
+void Emulator::o_0x8XY1()
+{
+    uint8_t VXAndVYOR{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) | m_chip8.getGPRegister(m_Y)) };
+    m_chip8.setGPRegister(m_X, VXAndVYOR);
+}
+
+void Emulator::o_0x8XY2()
+{
+    uint8_t VXAndVYAND{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & m_chip8.getGPRegister(m_Y)) };
+    m_chip8.setGPRegister(m_X, VXAndVYAND);
+}
+
+void Emulator::o_0x8XY3()
+{
+    uint8_t VXAndVYXOR{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) ^ m_chip8.getGPRegister(m_Y)) };
+    m_chip8.setGPRegister(m_X, VXAndVYXOR);
+}
+
+void Emulator::o_0x8XY4()
+{
+    //Unlike 7XNN, this addition will affect the carry flag.
+    //If the result is larger than 255 (and thus overflows the 8-bit register VX),
+    //the flag register VF is set to 1. If it doesn’t overflow, VF is set to 0.
+
+    int theAddition{ m_chip8.getGPRegister(m_X) + m_chip8.getGPRegister(m_Y) };
+
+    m_chip8.setGPRegister(m_X, theAddition);
+
+    if (theAddition > 255)
+        m_chip8.setGPRegister(0xF, 1);
+    else
+        m_chip8.setGPRegister(0xF, 0);
+
+}
+
 void Emulator::o_0xDXYN()
 {
     uint8_t xCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 63)};
