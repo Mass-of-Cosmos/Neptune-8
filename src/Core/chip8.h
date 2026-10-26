@@ -45,7 +45,7 @@ private:
     };
     uint16_t m_programCounter{0x200}; //aka PC
     uint16_t m_Iregister{};
-    std::array<uint16_t, static_cast<std::size_t>(16)> m_GPRegisters{};
+    std::array<uint8_t, 16> m_GPRegisters{};
 
 public:
    Chip8()
@@ -73,8 +73,9 @@ public:
     void pushPCToStack(uint16_t pc) {m_stack.push_back(pc);}
     // also returns the popped stack
     uint16_t popStack() { uint16_t poppedStack{m_stack.back()}; m_stack.pop_back(); return poppedStack; }
-    uint16_t getGPRegister(std::size_t index) {return m_GPRegisters[index];}
-    void setGPRegister(std::size_t indexOfRegister, uint16_t newValue) {m_GPRegisters[indexOfRegister] = newValue;}
+    uint8_t getGPRegister(std::size_t index) {return m_GPRegisters[index];}
+    void setGPRegister(std::size_t indexOfRegister, uint8_t newValue) {m_GPRegisters[indexOfRegister] = newValue;}
+    void addToGPRigester(std::size_t indexOfRegister, uint8_t value) { m_GPRegisters[indexOfRegister] += value; }
     void setIRegister(uint16_t value) {m_Iregister = value;}
     uint16_t getIRegister() const {return m_Iregister;}
     uint16_t getMemmoryLocation( uint16_t locationIndex) {return m_memory[locationIndex];}

@@ -12,6 +12,8 @@ private:
     void initilizeSDL();
     void CreateTexture();
 public:
+    SDLWindow(const SDLWindow&) = delete;
+    SDLWindow& operator=(const SDLWindow&) = delete;
     SDLWindow();
     ~SDLWindow();
 

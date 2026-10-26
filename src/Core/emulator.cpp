@@ -61,7 +61,7 @@ void Emulator::o_0x6XNN()
 
 void Emulator::o_0x7XNN()
 {
-    m_chip8.setGPRegister(m_X, m_NN);
+    m_chip8.addToGPRigester(m_X, m_NN);
 }
 
 void Emulator::o_0xANNN()
@@ -74,6 +74,7 @@ void Emulator::o_0xDXYN()
     uint8_t xCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 63)};
     uint8_t xCoordInitial{xCoord};
     uint8_t yCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_Y) & 31)};
+    m_shouldDraw = true;
 
     // set VF to 0
     m_chip8.setGPRegister(0xF, 0);
@@ -145,15 +146,19 @@ void Emulator::execute()
             break;
         case 5:
             switch (m_N)
+            {
                 case 0:
                     o_0x5XY0();
-            break;
+                    break;
+            }
             break;
         case 9:
             switch (m_N)
-        case 0:
-            o_0x9XY0();
-            break;
+            {
+                case 0:
+                    o_0x9XY0();
+                    break;
+            }
             break;
         case 6:
             o_0x6XNN();

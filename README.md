@@ -26,3 +26,7 @@ NOTE: I'm trying to avoid using AI LLMs as much as it makes sense (I don't want 
 
 for difficult parts, like reading a ROM using C++ STL fstream header, and basic Cmake or SDL questions, i ask LLMs for example codes, then after reviewing them, i add them to the project using my own logic. also finding out how to implement some systems programming patterns for the first time is not possible by pure "guessing", so LLMs are useful here to understand the basics.
 
+---------------------
+
+the emulator can now successfully run IBM's logo rom.
+

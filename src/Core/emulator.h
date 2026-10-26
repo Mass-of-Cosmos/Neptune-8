@@ -46,6 +46,11 @@ public:
     void readOpcode();
     void execute();
 
+    // get the m_shouldDraw flag
+    bool getShouldDraw() const { return m_shouldDraw; }
+    std::vector<uint8_t> getDisplay() const { return m_chip8.getDisplay(); }
+    void readRomPath(std::string& romPath) {m_chip8.loadRom(romPath); }
+
 };
 
 #endif
