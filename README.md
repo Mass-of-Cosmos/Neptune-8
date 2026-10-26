@@ -29,4 +29,6 @@ for difficult parts, like reading a ROM using C++ STL fstream header, and basic 
 ---------------------
 
 the emulator can now successfully run IBM's logo rom.
+<img width="2560" height="1440" alt="Screenshot (268)" src="https://github.com/user-attachments/assets/4a12b1e0-6f4d-4497-81da-19d4e5b1b6f9" />
+
 
