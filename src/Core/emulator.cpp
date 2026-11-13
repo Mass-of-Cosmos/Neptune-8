@@ -109,6 +109,32 @@ void Emulator::o_0x8XY4()
 
 }
 
+void Emulator::o_0x8XY6()
+{
+    // get the bit via bit mask
+    uint8_t theShiftedBit{ (m_chip8.getGPRegister(m_X)) && 0b00000001 };
+
+    // get and set the new (shifted) bit to the register
+    uint8_t shiftedToRight{ static_cast<uint8_t>((m_chip8.getGPRegister(m_X)) >> 1) };
+    m_chip8.setGPRegister(m_X, shiftedToRight );
+
+    // set VF to theShiftedBit
+    m_chip8.setGPRegister(0xF, theShiftedBit == 1 ? 1 : 0);
+}
+
+void Emulator::o_0x8XYE()
+{
+    // get the bit via bit mask
+    uint8_t theShiftedBit{ (m_chip8.getGPRegister(m_X)) && 0b00000001 };
+
+    // get and set the new (shifted) bit to the register
+    uint8_t shiftedToLeft{ static_cast<uint8_t>((m_chip8.getGPRegister(m_X)) << 1) };
+    m_chip8.setGPRegister(m_X, shiftedToLeft);
+
+    // set VF to theShiftedBit
+    m_chip8.setGPRegister(0xF, theShiftedBit == 1 ? 1 : 0);
+}
+
 void Emulator::o_0xDXYN()
 {
     uint8_t xCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 63)};
