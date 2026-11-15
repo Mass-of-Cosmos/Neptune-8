@@ -1,5 +1,6 @@
 #include "emulator.h"
 #include "chip8.h"
+#include "../Random.h"
 
 
 void Emulator::readOpcode()
@@ -134,6 +135,25 @@ void Emulator::o_0x8XYE()
     // set VF to theShiftedBit
     m_chip8.setGPRegister(0xF, theShiftedBit == 1 ? 1 : 0);
 }
+
+void Emulator::o_0xBNNN()
+{
+    // In the original COSMAC VIP interpreter, this instruction jumped to the address NNN plus the value in the register V0
+    // so we set PC to NNN + value in V0
+
+    m_chip8.setPC( m_NNN + m_chip8.getGPRegister(0x0));
+}
+
+void Emulator::o_0xCXNN()
+{
+    // the number binary ANDed with NN
+    uint8_t theNumber{static_cast<uint8_t>((Random::get(0, 50)) & m_NN) };
+
+    // put the result in VX
+    m_chip8.setGPRegister(m_X, theNumber );
+}
+
+
 
 void Emulator::o_0xDXYN()
 {

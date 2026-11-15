@@ -31,4 +31,23 @@ for difficult parts, like reading a ROM using C++ STL fstream header, and basic 
 the emulator can now successfully run IBM's logo rom.
 <img width="2560" height="1440" alt="Screenshot (268)" src="https://github.com/user-attachments/assets/4a12b1e0-6f4d-4497-81da-19d4e5b1b6f9" />
 
+---------------------
+Todos:
+
+1) after implementing all of the opcodes, im gonna add all of them in the switch statement of Emulator::execute()
+
+2) adding input support
+
+3) testing all of the instructions, and the correctness of the emulator with existing open source tools (after the emulator is done)
+
+---------------------
+
+third party codes/libraries used in the project:
+
+1) SDL3 (for displaying)
+
+2) Random.h header file by www.learncpp.com (for generating high quality random numbers)
+
+
+
 

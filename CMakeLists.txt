@@ -11,7 +11,7 @@ add_executable(Neptune_8
         src/Core/chip8.cpp
         src/Frontend/SDLWindow.cpp
         src/Frontend/SDLWindow.h
-)
+ "src/Random.h")
 
 include(FetchContent)
 

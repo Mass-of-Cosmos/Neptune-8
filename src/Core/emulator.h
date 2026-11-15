@@ -59,6 +59,10 @@ class Emulator
     void o_0x8XY6();
     // shift value of VX to left; set VF to the 1 or 0 (depending on the shifted bit)
     void o_0x8XYE();
+    // jump with offset
+    void o_0xBNNN();
+    // This instruction generates a random number, binary ANDs it with the value NN, and puts the result in VX.
+    void o_0xCXNN();
 
 public:
     void readOpcode();
