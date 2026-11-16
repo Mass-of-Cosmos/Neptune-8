@@ -153,6 +153,41 @@ void Emulator::o_0xCXNN()
     m_chip8.setGPRegister(m_X, theNumber );
 }
 
+void Emulator::o_0xEX9E()
+{
+    std::size_t key{ static_cast<std::size_t>(m_chip8.getGPRegister(m_X)) & 0x0F };
+
+    if (m_chip8.getKeys(key))
+    {
+        m_chip8.movePCNext();
+    }
+}
+
+void Emulator::o_0xEXA1()
+{
+    std::size_t key{ static_cast<std::size_t>(m_chip8.getGPRegister(m_X)) & 0x0F };
+
+    if (!(m_chip8.getKeys(key)))
+    {
+        m_chip8.movePCNext();
+    }
+}
+
+void Emulator::o_0xFX07()
+{
+
+    m_chip8.setGPRegister(m_X, m_chip8.getDelayTimer() );
+}
+
+void Emulator::o_0xFX15()
+{
+    m_chip8.setDealyTimer(m_chip8.getGPRegister(m_X));
+}
+
+void Emulator::o_0xFX18()
+{
+    m_chip8.setSoundTimer(m_chip8.getGPRegister(m_X));
+}
 
 
 void Emulator::o_0xDXYN()

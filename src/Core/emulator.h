@@ -63,6 +63,19 @@ class Emulator
     void o_0xBNNN();
     // This instruction generates a random number, binary ANDs it with the value NN, and puts the result in VX.
     void o_0xCXNN();
+    // will skip one instruction (increment PC by 2) if the key corresponding to the value in VX is pressed.
+    void o_0xEX9E();
+    // skips if the key corresponding to the value in VX is not pressed.
+    void o_0xEXA1();
+
+    // Timer related opcodes
+ 
+    // sets VX to the current value of the delay timer
+    void o_0xFX07();
+    // sets the delay timer to the value in VX
+    void o_0xFX15();
+    // sets the sound timer to the value in VX
+    void o_0xFX18();
 
 public:
     void readOpcode();

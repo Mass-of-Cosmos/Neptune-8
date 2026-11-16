@@ -36,13 +36,7 @@ private:
     // 4	5	6	D
     // 7	8	9	E
     // A	0	B	F
-    // the key layout is arranged in this order in the array: left to right, up to down in HEX
-    std::array<int, 16> m_keys {
-        0x1, 0x2, 0x3, 0xC,
-        0x4, 0x5, 0x6, 0xD,
-        0x7, 0x8, 0x9, 0xE,
-        0xA, 0x0, 0xB, 0xF
-    };
+    std::array<int, 16> m_keys {};
     uint16_t m_programCounter{0x200}; //aka PC
     uint16_t m_Iregister{};
     std::array<uint8_t, 16> m_GPRegisters{};
@@ -79,6 +73,10 @@ public:
     void setIRegister(uint16_t value) {m_Iregister = value;}
     uint16_t getIRegister() const {return m_Iregister;}
     uint16_t getMemmoryLocation( uint16_t locationIndex) {return m_memory[locationIndex];}
+    int getKeys(std::size_t index) { return m_keys[index]; }
+    uint8_t getDelayTimer() { return m_delayTimer; }
+    void setDealyTimer(uint8_t newValue) { m_delayTimer = newValue; }
+    void setSoundTimer(uint8_t newValue) { m_soundTimer = newValue; }
 };
 
 #endif
