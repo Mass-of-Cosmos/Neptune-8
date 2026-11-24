@@ -5,17 +5,38 @@
 #include "frontend/SDLWindow.h"
 #include <thread>
 #include <chrono>
+#include <limits>
 
 int main( int argc, char* argv[] )
 {
-    std::string romPath{};
-    std::cout << "Enter the path of a chip8 rom:\n";
-    std::getline(std::cin >> std::ws, romPath);
-
+    // create the emulator
     Emulator emulator{};
+    
+    std::string romPath{};
+    
+    // get rom path
+    while (true)
+    {
+        std::cout << "Enter the full path of a chip8 rom in your PC (e.g. 'D:\\Roms\\IBM Logo.ch8'):\n";
+        std::getline(std::cin >> std::ws, romPath);
+
+        // handling unextracted user input:
+        if (!std::cin)
+        {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            continue;
+        }
+
+        // break if the user provided a succesfull path
+        if (emulator.readRomPath(romPath))
+            break;
+    }
+
+    // create SDL3 Window
     SDLWindow window{};
 
-    emulator.readRomPath(romPath);
+    
 
     // we aim for abot 700 instructions per second to control the speed of our emulator
     // 1 / 700 is 0.001428 seconds.
