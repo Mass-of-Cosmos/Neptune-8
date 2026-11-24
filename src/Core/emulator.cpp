@@ -103,10 +103,10 @@ void Emulator::o_0x8XY4()
 
     m_chip8.setGPRegister(m_X, theAddition);
 
-    if (theAddition > 255)
-        m_chip8.setGPRegister(0xF, 1);
-    else
-        m_chip8.setGPRegister(0xF, 0);
+if (theAddition > 255)
+m_chip8.setGPRegister(0xF, 1);
+else
+m_chip8.setGPRegister(0xF, 0);
 
 }
 
@@ -117,7 +117,7 @@ void Emulator::o_0x8XY6()
 
     // get and set the new (shifted) bit to the register
     uint8_t shiftedToRight{ static_cast<uint8_t>((m_chip8.getGPRegister(m_X)) >> 1) };
-    m_chip8.setGPRegister(m_X, shiftedToRight );
+    m_chip8.setGPRegister(m_X, shiftedToRight);
 
     // set VF to theShiftedBit
     m_chip8.setGPRegister(0xF, theShiftedBit == 1 ? 1 : 0);
@@ -141,16 +141,16 @@ void Emulator::o_0xBNNN()
     // In the original COSMAC VIP interpreter, this instruction jumped to the address NNN plus the value in the register V0
     // so we set PC to NNN + value in V0
 
-    m_chip8.setPC( m_NNN + m_chip8.getGPRegister(0x0));
+    m_chip8.setPC(m_NNN + m_chip8.getGPRegister(0x0));
 }
 
 void Emulator::o_0xCXNN()
 {
     // the number binary ANDed with NN
-    uint8_t theNumber{static_cast<uint8_t>((Random::get(0, 50)) & m_NN) };
+    uint8_t theNumber{ static_cast<uint8_t>((Random::get(0, 50)) & m_NN) };
 
     // put the result in VX
-    m_chip8.setGPRegister(m_X, theNumber );
+    m_chip8.setGPRegister(m_X, theNumber);
 }
 
 void Emulator::o_0xEX9E()
@@ -176,7 +176,7 @@ void Emulator::o_0xEXA1()
 void Emulator::o_0xFX07()
 {
 
-    m_chip8.setGPRegister(m_X, m_chip8.getDelayTimer() );
+    m_chip8.setGPRegister(m_X, m_chip8.getDelayTimer());
 }
 
 void Emulator::o_0xFX15()
@@ -188,6 +188,32 @@ void Emulator::o_0xFX18()
 {
     m_chip8.setSoundTimer(m_chip8.getGPRegister(m_X));
 }
+
+void Emulator::o_0xFX1E()
+{
+    m_chip8.setIRegister(m_chip8.getIRegister() + m_chip8.getGPRegister(m_X));
+    if (m_chip8.getIRegister() > 0x1000)
+        m_chip8.setGPRegister(0xF, 1);
+}
+
+void Emulator::o_0xFX0A(std::size_t input)
+{
+    while (true)
+    {
+        // if input is valid
+        if ((input == 0x0) || (input == 0x1) || (input == 0x2) || (input == 0x3) ||
+            (input == 0x4) || (input == 0x5) || (input == 0x6) || (input == 0x7) ||
+            (input == 0x8) || (input == 0x9) || (input == 0xA) || (input == 0xB) ||
+            (input == 0xC) || (input == 0xD) || (input == 0xE) || (input == 0xF))
+        {
+            m_chip8.setGPRegister(m_X, input);
+            break;
+        }
+        else
+            continue;
+    }
+}
+
 
 
 void Emulator::o_0xDXYN()
@@ -238,7 +264,7 @@ void Emulator::o_0xDXYN()
     }
 }
 
-void Emulator::execute()
+void Emulator::execute(std::size_t input)
 {
     if (m_opcode == 0x00E0)
     {

@@ -76,10 +76,13 @@ class Emulator
     void o_0xFX15();
     // sets the sound timer to the value in VX
     void o_0xFX18();
-
+    // The index register I will get the value in VX added to it; set VF to 1 if I “overflows” from 0FFF to above 1000 
+    void o_0xFX1E();
+    // get key
+    void o_0xFX0A(std::size_t input);
 public:
     void readOpcode();
-    void execute();
+    void execute(std::size_t input);
 
     // get the m_shouldDraw flag
     bool getShouldDraw() const { return m_shouldDraw; }
