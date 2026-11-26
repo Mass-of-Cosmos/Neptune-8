@@ -214,6 +214,21 @@ void Emulator::o_0xFX0A(std::size_t input)
     }
 }
 
+void Emulator::o_0xFX29()
+{
+    uint8_t fontRelatedNibble{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 0x000Fu) };
+
+    // index register I is set to the address of the hexadecimal character in VX (its last nibble)
+    const uint8_t startOfFontsInMemory { 0x050 };
+    const uint8_t eachFontsLength{ 5 };
+    m_chip8.setIRegister(startOfFontsInMemory + fontRelatedNibble * eachFontsLength);
+
+    // Register I should point to the start of where the font is for the associated bytes that hold the font in the memory.
+    // each 5 continious bytes represent 1 font; so if VX gave 0 --> 0x050 + (0 * 5)
+    //                                              if VX gave 1 --> 0x050 + (1 * 5)
+    //                                              Etc...
+}
+
 
 
 void Emulator::o_0xDXYN()

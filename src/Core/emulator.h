@@ -80,6 +80,10 @@ class Emulator
     void o_0xFX1E();
     // get key
     void o_0xFX0A(std::size_t input);
+
+
+    // Fonts related opcode
+    void o_0xFX29();
 public:
     void readOpcode();
     void execute(std::size_t input);
