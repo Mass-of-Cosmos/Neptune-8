@@ -229,6 +229,63 @@ void Emulator::o_0xFX29()
     //                                              Etc...
 }
 
+void Emulator::o_0xFX55()
+{
+
+    uint16_t IRegVal{ m_chip8.getIRegister()};
+
+    for (uint16_t i{ 0 }; i <= m_chip8.getGPRegister(m_X); ++i)
+    {
+        uint8_t GPRegister{ m_chip8.getGPRegister(i)};
+
+        m_chip8.loadToMemory(IRegVal + i, GPRegister);
+    }
+}
+
+void Emulator::o_0xFX65()
+{
+    uint16_t IRegVal{ m_chip8.getIRegister() };
+
+    for (uint16_t i{ 0 }; i <= m_chip8.getGPRegister(m_X); ++i)
+    {
+        uint8_t valueInMemory{ m_chip8.readFromMemory(IRegVal + i)};
+        m_chip8.setGPRegister(i, valueInMemory);
+    }
+}
+
+void Emulator::o_0xFX33()
+{
+    std::array<uint8_t, 3> digits{};
+
+    // get the digits (right to left)
+    std::size_t i{ 0 };
+    std::size_t j{ 0 };
+    uint8_t VXGPRCopy{ m_chip8.getGPRegister(m_X) };
+    while (j < 3)
+    {
+        if ((VXGPRCopy - i) % 10 != 0)
+        {
+            ++i;
+            continue;
+        }
+        else if ((VXGPRCopy - i) % 10 == 0)
+        {
+            digits[j] = i;
+            VXGPRCopy /= 10;
+            i = 0;
+            ++j;
+        }
+    }
+
+    std::size_t order{ 0 };
+    // add the digits (left to right) to memory at address of I + n 
+    // n is the order of digit from left to right
+    for (std::size_t index{ 2 }; index >= 0; --index)
+    {
+        m_chip8.loadToMemory(m_chip8.getIRegister() + order, digits[index]);
+        ++order;
+    }
+}
 
 
 void Emulator::o_0xDXYN()

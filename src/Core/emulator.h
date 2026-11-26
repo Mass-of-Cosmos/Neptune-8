@@ -80,10 +80,17 @@ class Emulator
     void o_0xFX1E();
     // get key
     void o_0xFX0A(std::size_t input);
-
-
     // Fonts related opcode
     void o_0xFX29();
+    // the value of each variable register from V0 to VX inclusive (if X is 0, then only V0)
+    // will be stored in successive memory addresses, starting with the one that’s stored in I
+    void o_0xFX55();
+    // this does the opposite; it takes the value stored at the memory addresses and loads them into the variable registers instead.
+    void o_0xFX65();
+    // it takes the number in VX (which is one byte, so it can be any number from 0 to 255)
+    // and converts it to three decimal digits, storing these digits in memory at the address in the index register I.
+    void o_0xFX33();
+
 public:
     void readOpcode();
     void execute(std::size_t input);

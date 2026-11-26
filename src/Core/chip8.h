@@ -77,6 +77,8 @@ public:
     uint8_t getDelayTimer() { return m_delayTimer; }
     void setDealyTimer(uint8_t newValue) { m_delayTimer = newValue; }
     void setSoundTimer(uint8_t newValue) { m_soundTimer = newValue; }
+    void loadToMemory(std::size_t index, uint8_t value) { m_memory[index] = value; }
+    uint8_t readFromMemory(std::size_t index) const { return m_memory[index]; }
 };
 
 #endif
