@@ -34,9 +34,9 @@ the emulator can now successfully run IBM's logo rom.
 ---------------------
 Todos:
 
-1) after implementing all of the opcodes, im gonna add all of them in the switch statement of Emulator::execute()
+1) im gonna add all of them in the switch statement of Emulator::execute()
 
-2) adding input support
+2) add audio support in the main emulator loop using SDL3  
 
 3) testing all of the instructions, and the correctness of the emulator with existing open source tools (after the emulator is done)
 
