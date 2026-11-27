@@ -55,8 +55,12 @@ class Emulator
     void o_0x8XY3();
     // VX is set to the value of VX plus the value of VY. VY is not affected.
     void o_0x8XY4();
+    //  sets VX to the result of VX - VY.
+    void o_0x8XY5() { m_chip8.setGPRegister(m_X, m_chip8.getGPRegister(m_X) - m_chip8.getGPRegister(m_Y)); }
     // shift value of VX to right; set VF to the 1 or 0 (depending on the shifted bit)
     void o_0x8XY6();
+    // sets VX to the result of VY - VX.
+    void o_0x8XY7() { m_chip8.setGPRegister(m_X, m_chip8.getGPRegister(m_Y) - m_chip8.getGPRegister(m_X)); }
     // shift value of VX to left; set VF to the 1 or 0 (depending on the shifted bit)
     void o_0x8XYE();
     // jump with offset

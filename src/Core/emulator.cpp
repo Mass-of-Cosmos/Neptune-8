@@ -1,7 +1,8 @@
 #include "emulator.h"
 #include "chip8.h"
 #include "../Random.h"
-
+#include <cassert>
+#include <iostream>
 
 void Emulator::readOpcode()
 {
@@ -16,85 +17,101 @@ void Emulator::readOpcode()
 
 void Emulator::o_0x00E0()
 {
+    std::cerr << "opcode: o_0x00E0  is running...\n";
+
     m_chip8.clearScreen();
     m_shouldDraw = true;
 }
 
 void Emulator::o_0x2NNN()
 {
+    std::cerr << "opcode: o_0x2NNN  is running...\n";
     m_chip8.pushPCToStack(m_chip8.getPC());
     m_chip8.setPC(m_NNN);
 }
 
 void Emulator::o_0x00EE()
 {
+    std::cerr << "opcode: o_0x00EE  is running...\n";
     m_chip8.setPC(m_chip8.popStack());
 }
 
 void Emulator::o_0x3XNN()
 {
+    std::cerr << "opcode: o_0x3XNN  is running...\n";
     if (m_chip8.getGPRegister(m_X) == m_NN)
         m_chip8.movePCNext();
 }
 
 void Emulator::o_0x4XNN()
 {
+    std::cerr << "opcode: o_0x4XNN  is running...\n";
     if (m_chip8.getGPRegister(m_X) != m_NN)
         m_chip8.movePCNext();
 }
 
 void Emulator::o_0x5XY0()
 {
+    std::cerr << "opcode: o_0x5XY0  is running...\n";
     if (m_chip8.getGPRegister(m_X) == m_chip8.getGPRegister(m_Y))
         m_chip8.movePCNext();
 }
 
 void Emulator::o_0x9XY0()
 {
+    std::cerr << "opcode: o_0x9XY0  is running...\n";
     if (m_chip8.getGPRegister(m_X) != m_chip8.getGPRegister(m_Y))
         m_chip8.movePCNext();
 }
 
 void Emulator::o_0x6XNN()
 {
+    std::cerr << "opcode: o_0x6XNN  is running...\n";
     m_chip8.setGPRegister(m_X, m_NN);
 }
 
 void Emulator::o_0x7XNN()
 {
+    std::cerr << "opcode: o_0x7XNN  is running...\n";
     m_chip8.addToGPRigester(m_X, m_NN);
 }
 
 void Emulator::o_0xANNN()
 {
+    std::cerr << "opcode: o_0xANNN  is running...\n";
     m_chip8.setIRegister(m_NNN);
 }
 
 void Emulator::o_0x8XY0()
 {
+    std::cerr << "opcode: o_0x8XY0  is running...\n";
     m_chip8.setGPRegister(m_X, m_chip8.getGPRegister(m_Y));
 }
 
 void Emulator::o_0x8XY1()
 {
+    std::cerr << "opcode: o_0x8XY1  is running...\n";
     uint8_t VXAndVYOR{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) | m_chip8.getGPRegister(m_Y)) };
     m_chip8.setGPRegister(m_X, VXAndVYOR);
 }
 
 void Emulator::o_0x8XY2()
 {
+    std::cerr << "opcode: o_0x8XY2  is running...\n";
     uint8_t VXAndVYAND{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & m_chip8.getGPRegister(m_Y)) };
     m_chip8.setGPRegister(m_X, VXAndVYAND);
 }
 
 void Emulator::o_0x8XY3()
 {
+    std::cerr << "opcode: o_0x8XY3  is running...\n";
     uint8_t VXAndVYXOR{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) ^ m_chip8.getGPRegister(m_Y)) };
     m_chip8.setGPRegister(m_X, VXAndVYXOR);
 }
 
 void Emulator::o_0x8XY4()
 {
+    std::cerr << "opcode: o_0x8XY4  is running...\n";
     //Unlike 7XNN, this addition will affect the carry flag.
     //If the result is larger than 255 (and thus overflows the 8-bit register VX),
     //the flag register VF is set to 1. If it doesn’t overflow, VF is set to 0.
@@ -112,6 +129,7 @@ m_chip8.setGPRegister(0xF, 0);
 
 void Emulator::o_0x8XY6()
 {
+    std::cerr << "opcode: o_0x8XY6  is running...\n";
     // get the bit via bit mask
     uint8_t theShiftedBit{ (m_chip8.getGPRegister(m_X)) && 0b00000001 };
 
@@ -125,6 +143,7 @@ void Emulator::o_0x8XY6()
 
 void Emulator::o_0x8XYE()
 {
+    std::cerr << "opcode: o_0x8XYE  is running...\n";
     // get the bit via bit mask
     uint8_t theShiftedBit{ (m_chip8.getGPRegister(m_X)) && 0b00000001 };
 
@@ -138,6 +157,8 @@ void Emulator::o_0x8XYE()
 
 void Emulator::o_0xBNNN()
 {
+    std::cerr << "opcode: o_0xBNNN  is running...\n";
+
     // In the original COSMAC VIP interpreter, this instruction jumped to the address NNN plus the value in the register V0
     // so we set PC to NNN + value in V0
 
@@ -146,6 +167,7 @@ void Emulator::o_0xBNNN()
 
 void Emulator::o_0xCXNN()
 {
+    std::cerr << "opcode: o_0xCXNN  is running...\n";
     // the number binary ANDed with NN
     uint8_t theNumber{ static_cast<uint8_t>((Random::get(0, 50)) & m_NN) };
 
@@ -155,6 +177,7 @@ void Emulator::o_0xCXNN()
 
 void Emulator::o_0xEX9E()
 {
+    std::cerr << "opcode: o_0xEX9E  is running...\n";
     std::size_t key{ static_cast<std::size_t>(m_chip8.getGPRegister(m_X)) & 0x0F };
 
     if (m_chip8.getKeys(key))
@@ -165,6 +188,7 @@ void Emulator::o_0xEX9E()
 
 void Emulator::o_0xEXA1()
 {
+    std::cerr << "opcode: o_0xEXA1  is running...\n";
     std::size_t key{ static_cast<std::size_t>(m_chip8.getGPRegister(m_X)) & 0x0F };
 
     if (!(m_chip8.getKeys(key)))
@@ -175,22 +199,25 @@ void Emulator::o_0xEXA1()
 
 void Emulator::o_0xFX07()
 {
-
+    std::cerr << "opcode: o_0xFX07  is running...\n";
     m_chip8.setGPRegister(m_X, m_chip8.getDelayTimer());
 }
 
 void Emulator::o_0xFX15()
 {
+    std::cerr << "opcode: o_0xFX15  is running...\n";
     m_chip8.setDealyTimer(m_chip8.getGPRegister(m_X));
 }
 
 void Emulator::o_0xFX18()
 {
+    std::cerr << "opcode: o_0xFX18  is running...\n";
     m_chip8.setSoundTimer(m_chip8.getGPRegister(m_X));
 }
 
 void Emulator::o_0xFX1E()
 {
+    std::cerr << "opcode: o_0xFX1E  is running...\n";
     m_chip8.setIRegister(m_chip8.getIRegister() + m_chip8.getGPRegister(m_X));
     if (m_chip8.getIRegister() > 0x1000)
         m_chip8.setGPRegister(0xF, 1);
@@ -198,6 +225,7 @@ void Emulator::o_0xFX1E()
 
 void Emulator::o_0xFX0A(std::size_t input)
 {
+    std::cerr << "opcode: o_0xFX0A  is running...\n";
     while (true)
     {
         // if input is valid
@@ -216,6 +244,7 @@ void Emulator::o_0xFX0A(std::size_t input)
 
 void Emulator::o_0xFX29()
 {
+    std::cerr << "opcode: o_0xFX29  is running...\n";
     uint8_t fontRelatedNibble{ static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 0x000Fu) };
 
     // index register I is set to the address of the hexadecimal character in VX (its last nibble)
@@ -231,12 +260,13 @@ void Emulator::o_0xFX29()
 
 void Emulator::o_0xFX55()
 {
+    std::cerr << "opcode: o_0xFX55  is running...\n";
 
     uint16_t IRegVal{ m_chip8.getIRegister()};
 
-    for (uint16_t i{ 0 }; i <= m_chip8.getGPRegister(m_X); ++i)
+    for (uint16_t i{ 0 }; i <= m_X; ++i)
     {
-        uint8_t GPRegister{ m_chip8.getGPRegister(i)};
+        uint16_t GPRegister{ m_chip8.getGPRegister(i)};
 
         m_chip8.loadToMemory(IRegVal + i, GPRegister);
     }
@@ -244,9 +274,10 @@ void Emulator::o_0xFX55()
 
 void Emulator::o_0xFX65()
 {
+    std::cerr << "opcode: o_0xFX65  is running...\n";
     uint16_t IRegVal{ m_chip8.getIRegister() };
 
-    for (uint16_t i{ 0 }; i <= m_chip8.getGPRegister(m_X); ++i)
+    for (uint16_t i{ 0 }; i <= m_X; ++i)
     {
         uint8_t valueInMemory{ m_chip8.readFromMemory(IRegVal + i)};
         m_chip8.setGPRegister(i, valueInMemory);
@@ -255,6 +286,8 @@ void Emulator::o_0xFX65()
 
 void Emulator::o_0xFX33()
 {
+    std::cerr << "opcode: o_0xFX33  is running...\n";
+
     std::array<uint8_t, 3> digits{};
 
     // get the digits (right to left)
@@ -270,6 +303,7 @@ void Emulator::o_0xFX33()
         }
         else if ((VXGPRCopy - i) % 10 == 0)
         {
+            assert(j < digits.size() && " the array in o_0xFX33 is out of range!");
             digits[j] = i;
             VXGPRCopy /= 10;
             i = 0;
@@ -277,12 +311,13 @@ void Emulator::o_0xFX33()
         }
     }
 
-    std::size_t order{ 0 };
+    int order{ 0 };
     // add the digits (left to right) to memory at address of I + n 
     // n is the order of digit from left to right
-    for (std::size_t index{ 2 }; index >= 0; --index)
+    for (int index{ 2 }; index >= 0; --index)
     {
-        m_chip8.loadToMemory(m_chip8.getIRegister() + order, digits[index]);
+        assert( index < digits.size() && " the array in o_0xFX33 is out of range!");
+        m_chip8.loadToMemory(m_chip8.getIRegister() + static_cast<std::uint16_t>(order), digits[static_cast<std::size_t>(index)]);
         ++order;
     }
 }
@@ -290,6 +325,7 @@ void Emulator::o_0xFX33()
 
 void Emulator::o_0xDXYN()
 {
+    std::cerr << "opcode: o_0xDXYN  is running...\n";
     uint8_t xCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_X) & 63)};
     uint8_t xCoordInitial{xCoord};
     uint8_t yCoord{static_cast<uint8_t>(m_chip8.getGPRegister(m_Y) & 31)};
@@ -351,46 +387,57 @@ void Emulator::execute(std::size_t input)
 
     switch (m_firstNibble)
     {
-        case 1:
-            o_0x1NNN();
-            break;
-        case 2:
-            o_0x2NNN();
-            break;
-        case 3:
-            o_0x3XNN();
-            break;
-        case 4:
-            o_0x4XNN();
-            break;
+        case 1: o_0x1NNN(); break;
+        case 2: o_0x2NNN(); break;
+        case 3: o_0x3XNN(); break;
+        case 4: o_0x4XNN(); break;
         case 5:
             switch (m_N)
             {
-                case 0:
-                    o_0x5XY0();
-                    break;
-            }
-            break;
+                case 0: o_0x5XY0(); break;
+            } break;
         case 9:
             switch (m_N)
             {
-                case 0:
-                    o_0x9XY0();
-                    break;
-            }
-            break;
-        case 6:
-            o_0x6XNN();
-            break;
-        case 7:
-            o_0x7XNN();
-            break;
-        case 0xA:
-            o_0xANNN();
-            break;
-        case 0xD:
-            o_0xDXYN();
-            break;
+                case 0: o_0x9XY0(); break;
+            } break;
+        case 6: o_0x6XNN(); break;
+        case 7: o_0x7XNN(); break;
+        case 8:
+            switch (m_N)
+            {
+            case 0: o_0x8XY0(); break;
+            case 1: o_0x8XY1(); break;
+            case 2: o_0x8XY2(); break;
+            case 3: o_0x8XY3(); break;
+            case 4: o_0x8XY4(); break;
+            case 5: o_0x8XY5(); break;
+            case 6: o_0x8XY6(); break;
+            case 7: o_0x8XY7(); break;
+            case 0xE: o_0x8XYE(); break;
+            } break;
+        case 0xA: o_0xANNN(); break;
+        case 0xB: o_0xBNNN(); break;
+        case 0xC: o_0xCXNN(); break;
+        case 0xD: o_0xDXYN(); break;
+        case 0xE: 
+            switch (m_Y)
+            {
+            case 9: o_0xEX9E(); break;
+            case 0xA: if (m_N == 1) { o_0xEXA1(); } break;
+            } break;
+        case 0xF: switch (m_Y)
+            {
+        case 0: if (m_N == 7) { o_0xFX07(); } 
+              else if (m_N == 0xA) { o_0xFX0A(input); } break;
+        case 1: if (m_N == 5) { o_0xFX15(); }
+              else if (m_N == 8) { o_0xFX18(); }
+              else if (m_N == 0xE) { o_0xFX1E(); } break;
+        case 2: if (m_N == 9) { o_0xFX29(); } break;
+        case 3: if (m_N == 3) { o_0xFX33(); } break;
+        case 5: if (m_N == 5) { o_0xFX55(); } break;
+        case 6: if (m_N == 5) { o_0xFX65(); } break;
 
+            } break;
     }
 }
