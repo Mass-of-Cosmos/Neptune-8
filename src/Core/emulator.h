@@ -68,9 +68,9 @@ class Emulator
     // This instruction generates a random number, binary ANDs it with the value NN, and puts the result in VX.
     void o_0xCXNN();
     // will skip one instruction (increment PC by 2) if the key corresponding to the value in VX is pressed.
-    void o_0xEX9E();
+    void o_0xEX9E(std::size_t input);
     // skips if the key corresponding to the value in VX is not pressed.
-    void o_0xEXA1();
+    void o_0xEXA1(std::size_t input);
 
     // Timer related opcodes
  
@@ -98,7 +98,6 @@ class Emulator
 public:
     void readOpcode();
     void execute(std::size_t input);
-
     // get the m_shouldDraw flag
     bool getShouldDraw() const { return m_shouldDraw; }
     std::vector<uint8_t> getDisplay() const { return m_chip8.getDisplay(); }

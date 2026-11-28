@@ -7,28 +7,34 @@
 #include <chrono>
 #include <limits>
 
-// converts user's keyboard inputs to the corresponding keypad's hex adress
-std::size_t inputConverter(SDL_Keycode input)
+namespace DefaultValues
 {
-    switch (input)
-    {
-    case SDLK_1: return 0x0;
-    case SDLK_2: return 0x1;
-    case SDLK_3: return 0x2;
-    case SDLK_4: return 0x3;
-    case SDLK_Q: return 0x4;
-    case SDLK_W: return 0x5;
-    case SDLK_E: return 0x6;
-    case SDLK_R: return 0x7;
-    case SDLK_A: return 0x8;
-    case SDLK_S: return 0x9;
-    case SDLK_D: return 0xA;
-    case SDLK_F: return 0xB;
-    case SDLK_Z: return 0xC;
-    case SDLK_X: return 0xD;
-    case SDLK_C: return 0xE;
-    case SDLK_V: return 0xF;
-    }
+    constexpr std::size_t inputCode{ 120 };
+}
+
+// converts user's keyboard inputs to the corresponding keypad's hex adress
+std::size_t getInputState()
+{
+    static const bool* pressedButton = SDL_GetKeyboardState(nullptr);
+    
+    if  (pressedButton[SDL_SCANCODE_1]) return 0x1u;
+    else if (pressedButton[SDL_SCANCODE_2]) return 0x2u;
+    else if (pressedButton[SDL_SCANCODE_3]) return 0x3u;
+    else if (pressedButton[SDL_SCANCODE_4]) return 0xCu;
+    else if (pressedButton[SDL_SCANCODE_Q]) return 0x4u;
+    else if (pressedButton[SDL_SCANCODE_W]) return 0x5u;
+    else if (pressedButton[SDL_SCANCODE_E]) return 0x6u;
+    else if (pressedButton[SDL_SCANCODE_R]) return 0xDu;
+    else if (pressedButton[SDL_SCANCODE_A]) return 0x7u;
+    else if (pressedButton[SDL_SCANCODE_S]) return 0x8u;
+    else if (pressedButton[SDL_SCANCODE_D]) return 0x9u;
+    else if (pressedButton[SDL_SCANCODE_F]) return 0xEu;
+    else if (pressedButton[SDL_SCANCODE_Z]) return 0xAu;
+    else if (pressedButton[SDL_SCANCODE_X]) return 0x0u;
+    else if (pressedButton[SDL_SCANCODE_C]) return 0xBu;
+    else if (pressedButton[SDL_SCANCODE_V]) return 0xFu;
+    else return DefaultValues::inputCode;
+    
 }
 
 int main( int argc, char* argv[] )
@@ -67,35 +73,39 @@ int main( int argc, char* argv[] )
     // 1,428 microseconds is ~0.001428 seconds (~700 Hz)
     constexpr std::chrono::microseconds cycleDelay{ 1428 };
     bool shouldDrawFlag{};
-    bool mainLoopFlag{true};
     SDL_Event sdlEvent;
+    bool mainLoopFlag{true};
     // main emulation loop
+    
     while (mainLoopFlag)
     {
+      
         //Handle events on queue
-        while( SDL_PollEvent( &sdlEvent ) != 0 )
+        while (SDL_PollEvent(&sdlEvent) != 0)
         {
             //User requests quit
-            if( sdlEvent.type == SDL_EVENT_QUIT )
+            if (sdlEvent.type == SDL_EVENT_QUIT)
             {
                 mainLoopFlag = false;
             }
+                
         }
 
-        // fetch and decode
-        emulator.readOpcode();
+            // fetch and decode
+            emulator.readOpcode();
 
-        //execute
-        emulator.execute(inputConverter(sdlEvent.type));
-        shouldDrawFlag = emulator.getShouldDraw();
-        if (shouldDrawFlag)
-        {
-            window.updateAndRenderTexture(emulator.getDisplay());
-        }
-
+            //execute
+            emulator.execute(getInputState());
+        
+            shouldDrawFlag = emulator.getShouldDraw();
+            if (shouldDrawFlag)
+            {
+                window.updateAndRenderTexture(emulator.getDisplay());
+            }
+        
         // delay between each instrcution
         std::this_thread::sleep_for(cycleDelay);
     }
-
+            
     return 0;
 }

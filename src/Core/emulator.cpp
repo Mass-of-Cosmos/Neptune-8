@@ -175,25 +175,34 @@ void Emulator::o_0xCXNN()
     m_chip8.setGPRegister(m_X, theNumber);
 }
 
-void Emulator::o_0xEX9E()
+void Emulator::o_0xEX9E(std::size_t input)
 {
     std::cerr << "opcode: o_0xEX9E  is running...\n";
-    std::size_t key{ static_cast<std::size_t>(m_chip8.getGPRegister(m_X)) & 0x0F };
+    std::size_t key{ m_chip8.getGPRegister(m_X)};
+    std::cerr << "Input you pressed is : " << input << '\n';
 
-    if (m_chip8.getKeys(key))
+    if ( key == input )
     {
+        std::cerr << "Matched\n";
         m_chip8.movePCNext();
     }
+    else std::cerr << "Not Matched\n";
 }
 
-void Emulator::o_0xEXA1()
+void Emulator::o_0xEXA1(std::size_t input)
 {
     std::cerr << "opcode: o_0xEXA1  is running...\n";
-    std::size_t key{ static_cast<std::size_t>(m_chip8.getGPRegister(m_X)) & 0x0F };
+    std::size_t key{ m_chip8.getGPRegister(m_X) };
+    std::cerr << "Input you pressed is : " << input << '\n';
 
-    if (!(m_chip8.getKeys(key)))
+    if (key != input)
     {
         m_chip8.movePCNext();
+        
+    }
+    else
+    {
+        std::cerr << "Not Matched\n";
     }
 }
 
@@ -226,20 +235,19 @@ void Emulator::o_0xFX1E()
 void Emulator::o_0xFX0A(std::size_t input)
 {
     std::cerr << "opcode: o_0xFX0A  is running...\n";
-    while (true)
-    {
+    std::cerr << "input: " << input << '\n';
         // if input is valid
-        if ((input == 0x0) || (input == 0x1) || (input == 0x2) || (input == 0x3) ||
-            (input == 0x4) || (input == 0x5) || (input == 0x6) || (input == 0x7) ||
-            (input == 0x8) || (input == 0x9) || (input == 0xA) || (input == 0xB) ||
-            (input == 0xC) || (input == 0xD) || (input == 0xE) || (input == 0xF))
-        {
-            m_chip8.setGPRegister(m_X, input);
-            break;
-        }
-        else
-            continue;
+    if ((input == 0x0u) || (input == 0x1u) || (input == 0x2u) || (input == 0x3u) ||
+        (input == 0x4u) || (input == 0x5u) || (input == 0x6u) || (input == 0x7u) ||
+        (input == 0x8u) || (input == 0x9u) || (input == 0xAu) || (input == 0xBu) ||
+        (input == 0xCu) || (input == 0xDu) || (input == 0xEu) || (input == 0xFu))
+    {
+        m_chip8.setGPRegister(m_X, input);
+        
     }
+    else
+        m_chip8.setPC(m_chip8.getPC() - 2); // undo the instructuion by setting pc to original value, the next fetch requests this opcode again
+            
 }
 
 void Emulator::o_0xFX29()
@@ -374,6 +382,7 @@ void Emulator::o_0xDXYN()
 
 void Emulator::execute(std::size_t input)
 {
+
     if (m_opcode == 0x00E0)
     {
         o_0x00E0();
@@ -423,8 +432,8 @@ void Emulator::execute(std::size_t input)
         case 0xE: 
             switch (m_Y)
             {
-            case 9: o_0xEX9E(); break;
-            case 0xA: if (m_N == 1) { o_0xEXA1(); } break;
+            case 9: o_0xEX9E(input); break;
+            case 0xA: if (m_N == 1) { o_0xEXA1(input); } break;
             } break;
         case 0xF: switch (m_Y)
             {
