@@ -38,6 +38,8 @@ Todos:
 
 2) testing all of the instructions, and the correctness of the emulator with existing open source tools (after the emulator is done)
 
+3) Adding a way for the user to get a list of available roms in /roms subfolder, and just select it from the list, the user should be aible to add as many files as he/she want to the /roms folder.
+
 ---------------------
 
 third party codes/libraries used in the project:
