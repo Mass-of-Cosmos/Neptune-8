@@ -27,10 +27,14 @@ NOTE: I'm trying to avoid using AI LLMs as much as it makes sense (I don't want 
 for difficult parts, like reading a ROM using C++ STL fstream header, and basic Cmake or SDL questions, i ask LLMs for example codes, then after reviewing them, i add them to the project using my own logic. also finding out how to implement some systems programming patterns for the first time is not possible by pure "guessing", so LLMs are useful here to understand the basics.
 
 ---------------------
+Progress:
 
-the emulator can now successfully run IBM's logo rom.
 <img width="2560" height="1440" alt="Screenshot (268)" src="https://github.com/user-attachments/assets/4a12b1e0-6f4d-4497-81da-19d4e5b1b6f9" />
 
+-looks like the emulator can run lots of games now and they work visualy fine; testing is needed for each opcode though.
+
+
+-all opcodes have been implemented. testing via open source tools is in progress...
 ---------------------
 Todos:
 
